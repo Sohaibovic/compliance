@@ -7,6 +7,7 @@
 
   - name: Gather Instance per customers for ec2
     ec2_instance_info:
+    
     register: ec2_details
     when: '"ec2" is in group_namess'
 
