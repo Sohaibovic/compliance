@@ -64,17 +64,17 @@
           set_fact: 
             az_eap_facts: 
               "{{ az_eap_facts | combine(
-                  { item.networkProfile.networkInterfaces.id.split('/').last: 
+                  { item.properties.networkProfile.networkInterfaces.id.split('/').last: 
                     { 
-                      'image_id': item.storageProfile.imageReference.join('_')
-                      'key_name': osProfile.adminUsername, 
-                      'instance_type': item.hardwareProfile.vmSize, 
-                      'tags': item.tags 
+                      'image_id': item.properties.storageProfile.imageReference.join('_')
+                      'key_name': osProfile.properties.adminUsername, 
+                      'instance_type': item.properties.hardwareProfile.vmSize, 
+                      'tags': item.properties.tags 
                     } 
                   }
                 ) 
               }}"
-          loop: "{{ az_details.properties }}"
+          loop: "{{ az_details.response }}"
 
         - debug: 
             var: az_eap_facts
