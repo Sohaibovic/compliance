@@ -7,6 +7,8 @@
 
   - name: Gather Instance per customers for ec2
     ec2_instance_facts:
+      region: eu-west-1
+
     register: ec2_details
     when: "'ec2' is in group_names"
     run_once: yes
