@@ -5,48 +5,43 @@
 
   tasks: 
 
-  - name: Gather Instance per customers for ec2
-    ec2_instance_facts:
-      region: eu-west-1
-    register: ec2_details
-    when: "'ec2' is in group_names"
-    run_once: yes
-    delegate_to: localhost
-    become: no
+  block: 
+  
+    - name: Gather Instance per customers for ec2
+      ec2_instance_facts:
+        region: eu-west-1
+      register: ec2_details
 
-  - name: Extract needed info
-    set_fact:
-      ec2_needed: "{{ ec2_details | json_query(query) }}"
-    vars:
-      query: "instances[*].[private_ip_address, image_id, key_name, instance_type, tags ]"
-    run_once: yes
-    delegate_to: localhost
-    become: no
+    - name: Extract needed info
+      set_fact:
+        ec2_needed: "{{ ec2_details | json_query(query) }}"
+      vars:
+        query: "instances[*].[private_ip_address, image_id, key_name, instance_type, tags ]"
 
-  - set_fact:
-      eap_facts: {}
-    run_once: yes
-    delegate_to: localhost
-    become: no
+    - set_fact:
+        eap_facts: {}
 
-  - name: Build a Dictionary keyed with hostname
-    set_fact:
-      eap_facts: 
-        "{{ eap_facts | combine(
-            { item[0]: 
-              { 
-                'image_id': item[1], 
-                'key_name': item[2], 
-                'instance_type': item[3], 
-                'tags': item[4] 
-              } 
-            }
-          ) 
-        }}"
-    loop: "{{ ec2_needed }}"
-    run_once: yes
-    delegate_to: localhost
-    become: no
+    - name: Build a Dictionary keyed with hostname
+      set_fact:
+        eap_facts: 
+          "{{ eap_facts | combine(
+              { item[0]: 
+                { 
+                  'image_id': item[1], 
+                  'key_name': item[2], 
+                  'instance_type': item[3], 
+                  'tags': item[4] 
+                } 
+              }
+            ) 
+          }}"
+      loop: "{{ ec2_needed }}"
+
+  when: "'ec2' is in group_names"
+  run_once: yes
+  delegate_to: localhost
+  become: no
+
 
   - name: Gather Instance per customers for Azure
     azure_rm_resource_facts:
