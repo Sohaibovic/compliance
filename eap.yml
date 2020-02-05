@@ -89,6 +89,20 @@
 
         - debug: 
             var: az_ip_facts
+
+        - set_fact:
+            az_ip_dict: {}
+
+        - name: Build IP dict
+          set_fact: 
+            az_ip_dict:    
+              "{{ az_eap_facts | combine(  
+                  { item.networkinterfaces.0.name: item.networkinterfaces.0.name.private_ip_address }
+              ) }}"
+          loop: "{{ az_ip_facts.results }}"
+                
+        - debug: 
+            var: az_ip_dict
       
       when: "'azure' is in group_names"
       run_once: yes
