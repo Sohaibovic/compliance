@@ -129,6 +129,9 @@
           when: item.value.tags.Customer is defined
           loop: "{{ az_eap_dict | dict2items }}"
 
+        - debug: 
+            var: az_rg_dict
+
 
 
       when: "'azure' is in group_names"
