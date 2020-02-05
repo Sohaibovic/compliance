@@ -16,13 +16,12 @@ class LookupModule(LookupBase):
 
         # lookups in general are expected to both take a list as input and output a list
         # this is done so they work with the looping construct 'with_'.
-        ret = []
+        ret = {}
         for ip in eap:
                 if 'Customer' in eap[ip]['tags']:
                     customer = eap[ip]['tags']['Customer']
                     if customer in ret:
-                        # ret[customer].append(ip)
-                        pass
+                        ret[customer].append(ip)
                     else:
                         ret[customer] = ip
         return ret
