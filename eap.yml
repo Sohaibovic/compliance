@@ -48,7 +48,7 @@
         resource_type: VirtualMachines
         provider: compute
         api_version: "2019-07-01"
-      register: ec2_details
+      register: az_details
       when: "'azure' is in group_names"
       run_once: yes
       delegate_to: localhost
