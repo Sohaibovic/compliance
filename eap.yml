@@ -20,11 +20,11 @@
             query: "instances[*].[private_ip_address, image_id, key_name, instance_type, tags ]"
 
         - set_fact:
-            eap_facts: {}
+            ec2_eap_facts: {}
 
         - name: Build a Dictionary keyed with hostname
           set_fact:
-            eap_facts: 
+            ec2_eap_facts: 
               "{{ eap_facts | combine(
                   { item[0]: 
                     { 
@@ -38,18 +38,47 @@
               }}"
           loop: "{{ ec2_needed }}"
 
-      when: "'ec2' is in group_names"
       run_once: yes
       delegate_to: localhost
       become: no
 
-    - name: Gather Instance per customers for Azure
-      azure_rm_resource_facts:
-        resource_type: VirtualMachines
-        provider: compute
-        api_version: "2019-07-01"
-      register: az_details
-      when: "'azure' is in group_names"
+
+    - name: Build Azure info
+      block: 
+
+        - name: Gather Instance per customers for Azure
+          azure_rm_resource_facts:
+            resource_type: VirtualMachines
+            provider: compute
+            api_version: "2019-07-01"
+          register: az_details
+          when: "'azure' is in group_names"
+          run_once: yes
+          delegate_to: localhost
+          become: no
+
+        - set_fact:
+            az_eap_facts: {}
+
+        - name: Extract needed info
+          set_fact: 
+            az_eap_facts: 
+              "{{ az_eap_facts | combine(
+                  { item.networkProfile.networkInterfaces.id.split('/').last: 
+                    { 
+                      'image_id': item.storageProfile.imageReference.join('_')
+                      'key_name': osProfile.adminUsername, 
+                      'instance_type': item.hardwareProfile.vmSize, 
+                      'tags': item.tags 
+                    } 
+                  }
+                ) 
+              }}"
+          loop: "{{ az_details.properties }}"
+
+        - debug: 
+            var: az_eap_facts
+
       run_once: yes
       delegate_to: localhost
       become: no
