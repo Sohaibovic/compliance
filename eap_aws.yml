@@ -20,12 +20,12 @@
             query: "instances[*].[private_ip_address, image_id, key_name, instance_type, tags ]"
 
         - set_fact:
-            ec2_eap_facts: {}
+            ec2_eap_dict: {}
 
         - name: Build a Dictionary keyed with hostname
           set_fact:
             ec2_eap_dict: 
-              "{{ eap_facts | combine(
+              "{{ eap_dict | combine(
                   { item[0]: 
                     { 
                       'image_id': item[1], 
