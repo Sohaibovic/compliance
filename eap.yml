@@ -1,0 +1,23 @@
+- name: EAP Compliance Check
+  hosts: tag_Role_eap,eap
+  gather_facts: yes
+  become: yes
+
+  tasks: 
+
+  - name: Gather Instance per customers for ec2
+    ec2_instance_info:
+    register: ec2_details
+    when: '"ec2" is in group_namess'
+
+  - name: Gather Instance per customers for Azure
+    azure_rm_resource_info:
+      resource_type: virtualmachine
+    register: ec2_details
+    when: '"azure" is in group_namess'
+
+
+  # - name: Is instance HA or not 
+
+
+  # - name: 
