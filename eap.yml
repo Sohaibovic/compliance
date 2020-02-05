@@ -69,7 +69,6 @@
                       'image_id': item.properties.storageProfile.imageReference,
                       'key_name': item.properties.osProfile.adminUsername, 
                       'instance_type': item.properties.hardwareProfile.vmSize, 
-                      'tags': item.tags 
                     } 
                   }
                 ) 
