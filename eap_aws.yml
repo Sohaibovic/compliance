@@ -25,7 +25,7 @@
         - name: Build a Dictionary keyed with hostname
           set_fact:
             ec2_eap_dict: 
-              "{{ eap_dict | combine(
+              "{{ ec2_eap_dict | combine(
                   { item[0]: 
                     { 
                       'image_id': item[1], 
