@@ -24,7 +24,7 @@
 
         - name: Build a Dictionary keyed with hostname
           set_fact:
-            ec2_eap_facts: 
+            ec2_eap_dict: 
               "{{ eap_facts | combine(
                   { item[0]: 
                     { 
@@ -103,7 +103,21 @@
                 
         - debug: 
             var: az_ip_dict
-      
+
+        - set_fact:
+            az_eap_dict: {}
+
+        - name: Build Azure EAP dict
+          set_fact: 
+            az_eap_dict:    
+              "{{ az_eap_dict | combine(  
+                  { item.value: az_eap_facts[item.key] }
+              ) }}"
+          loop: "{{ az_ip_dict | dict2items }}"
+
+        - debug: 
+            var: az_eap_dict
+
       when: "'azure' is in group_names"
       run_once: yes
       delegate_to: localhost
