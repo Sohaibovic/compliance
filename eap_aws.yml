@@ -45,7 +45,7 @@
           set_fact: 
             ec2_customer_dict:
               "{{ ec2_customer_dict | combine(
-                  { item.value.tags.Customer: item.key }
+                  { item.value.tags.Customer: ec2_customer_dict[item.value.tags.Customer]|default({}) + item.key }
               )}}"  
           when: item.value.tags.Customer is defined
           loop: "{{ ec2_eap_dict | dict2items }}"
