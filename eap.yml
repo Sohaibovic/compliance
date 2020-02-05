@@ -97,7 +97,7 @@
           set_fact: 
             az_ip_dict:    
               "{{ az_eap_facts | combine(  
-                  { item.networkinterfaces.0.name: item.networkinterfaces.0.name.private_ip_address }
+                  { item.networkinterfaces.0.name: item.networkinterfaces.0.ip_configurations.0.private_ip_address }
               ) }}"
           loop: "{{ az_ip_facts.results }}"
                 
