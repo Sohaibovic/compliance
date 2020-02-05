@@ -16,7 +16,7 @@
 
   - name: Extract needed info
     set_fact:
-      needed: "{{ ec2_details.instances | json_query(query) }}"
+      needed: "{{ ec2_details | json_query(query) }}"
     vars:
       query: "instances[*].[private_ip_address, image_id, key_name, instance_type , tags ]"
   
