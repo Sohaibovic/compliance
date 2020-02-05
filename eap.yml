@@ -38,19 +38,20 @@
               }}"
           loop: "{{ ec2_needed }}"
 
-        # - set_fact:
-        #     ec2_customer_dict: {}
+        - set_fact:
+            ec2_customer_dict: {}
 
-        # - name: Build a list of ip for each customer
-        #   set_fact: 
-        #     "{{ ec2_customer_dict | combine(
-        #         { item.value.tags.Customer: item.key }
-        #     )}}"  
-        #   when: item.value.tags.Customer is defined
-        #   loop: "{{ ec2_eap_dict | dict2items }}"
+        - name: Build a list of ip for each customer
+          set_fact: 
+            ec2_customer_dict:
+              "{{ ec2_customer_dict | combine(
+                  { item.value.tags.Customer: item.key }
+              )}}"  
+          when: item.value.tags.Customer is defined
+          loop: "{{ ec2_eap_dict | dict2items }}"
 
-        # - debug: 
-        #     var: ec2_customer_dict
+        - debug: 
+            var: ec2_customer_dict
 
       when: "'ec2' is in group_names"
       run_once: yes
@@ -137,9 +138,10 @@
 
         - name: Build a list of ip for each customer
           set_fact: 
-            "{{ az_customer_dict | combine(
-                { item.value.tags.Customer: item.key }
-            )}}"  
+            az_customer_dict:
+              "{{ az_customer_dict | combine(
+                  { item.value.tags.Customer: item.key }
+              ) }}"  
           when: item.value.tags.Customer is defined
           loop: "{{ az_eap_dict | dict2items }}"
 
