@@ -21,7 +21,8 @@ class LookupModule(LookupBase):
                 if 'Customer' in eap[ip]['tags']:
                     customer = eap[ip]['tags']['Customer']
                     if customer in ret:
-                        ret[customer].append(ip)
+                        # ret[customer].append(ip)
+                        pass
                     else:
                         ret[customer] = ip
         return ret
