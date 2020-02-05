@@ -1,0 +1,59 @@
+- name: EAP Compliance Check
+  hosts: tag_Role_eap
+  gather_facts: yes
+  become: yes
+
+  tasks: 
+
+    - name: Build EC2 info
+      block: 
+
+        - name: Gather Instance per customers for ec2
+          ec2_instance_facts:
+            region: eu-west-1
+          register: ec2_details
+
+        - name: Extract needed info
+          set_fact:
+            ec2_needed: "{{ ec2_details | json_query(query) }}"
+          vars:
+            query: "instances[*].[private_ip_address, image_id, key_name, instance_type, tags ]"
+
+        - set_fact:
+            ec2_eap_facts: {}
+
+        - name: Build a Dictionary keyed with hostname
+          set_fact:
+            ec2_eap_dict: 
+              "{{ eap_facts | combine(
+                  { item[0]: 
+                    { 
+                      'image_id': item[1], 
+                      'key_name': item[2], 
+                      'instance_type': item[3], 
+                      'tags': item[4] 
+                    } 
+                  }
+                ) 
+              }}"
+          loop: "{{ ec2_needed }}"
+
+        - set_fact:
+            ec2_customer_dict: {}
+
+        - name: Build a list of ip for each customer
+          set_fact: 
+            ec2_customer_dict:
+              "{{ ec2_customer_dict | combine(
+                  { item.value.tags.Customer: item.key }
+              )}}"  
+          when: item.value.tags.Customer is defined
+          loop: "{{ ec2_eap_dict | dict2items }}"
+
+        - debug: 
+            var: ec2_customer_dict
+
+      when: "'ec2' is in group_names"
+      run_once: yes
+      delegate_to: localhost
+      become: no
