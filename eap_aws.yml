@@ -46,7 +46,7 @@
 
         - name: Build a list of ip for each customer
           set_fact: 
-            ec2_customer_dict: "{{ lookup('ips', ec2_eap_dict) }}"
+            ec2_customer_dict: "{{ lookup('ips', [ec2_eap_dict]) }}"
 
         - debug: 
             var: ec2_customer_dict
