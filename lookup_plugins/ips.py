@@ -18,8 +18,8 @@ class LookupModule(LookupBase):
         # this is done so they work with the looping construct 'with_'.
         ret = []
         for ip in eap:
-                if 'Customer' in ip['tags']:
-                    customer = ip['tags']['Customer']
+                if 'Customer' in eap[ip]['tags']:
+                    customer = eap[ip]['tags']['Customer']
                     ret[customer].append(ip)
         return ret
 
