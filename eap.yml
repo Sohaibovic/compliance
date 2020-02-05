@@ -85,7 +85,7 @@
             resource_group: item.value.rg
             name: item.key
           register: az_ip_facts
-          loop: "{{ az_eap_facts }}"
+          loop: "{{ az_eap_facts | dict2items }}"
 
         - debug: 
             var: az_ip_facts
