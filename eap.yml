@@ -1,5 +1,5 @@
 - name: EAP Compliance Check
-  hosts: tag_Role_eap:eap
+  hosts: tag_Role_eap:application_eap
   gather_facts: yes
   become: yes
 
