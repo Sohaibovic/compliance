@@ -123,9 +123,10 @@
 
         - name: Build a list of ip for each RG
           set_fact: 
-            "{{ az_ip_dict | combine(
+            "{{ az_rg_dict | combine(
                 { item.value.tags.Customer: item.key }
             )}}"  
+          when: item.value.tags.Customer is defined
           loop: "{{ az_eap_dict | dict2items }}"
 
 
