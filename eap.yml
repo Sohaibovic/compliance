@@ -8,12 +8,19 @@
   - name: Gather Instance per customers for ec2
     ec2_instance_facts:
       region: eu-west-1
-
     register: ec2_details
     when: "'ec2' is in group_names"
     run_once: yes
     delegate_to: localhost
     become: no
+
+  - name: Build a Dictionary 
+    set_fact:
+      eap_facts: "{{ eap_facts | default({}) | combine({ items[0]: items[1:] }) }}"
+    with_items: ec2_details  | json_query('instances[*].[private_ip_address, image_id, key_name, instance_type , tags ]')
+
+  - debug: 
+      var: eap_facts
 
   - name: Gather Instance per customers for Azure
     azure_rm_resource_facts:
