@@ -37,7 +37,7 @@
 
   - name: Build a Dictionary keyed with hostname
     set_fact:
-      eap_facts: "{{ eap_facts | combine({ item[0]: item[1] }) }}"
+      eap_facts: "{{ eap_facts | combine({ item[0]: item[1:] }) }}"
     loop: "{{ needed }}"
     run_once: yes
     delegate_to: localhost
