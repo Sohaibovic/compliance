@@ -38,6 +38,9 @@
               }}"
           loop: "{{ ec2_needed }}"
 
+        - debug: 
+            var: ec2_eap_dict
+
         - set_fact:
             ec2_customer_dict: {}
 
