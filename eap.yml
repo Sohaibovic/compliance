@@ -6,7 +6,7 @@
   tasks: 
 
   block: 
-  
+
     - name: Gather Instance per customers for ec2
       ec2_instance_facts:
         region: eu-west-1
@@ -43,14 +43,14 @@
   become: no
 
 
-  - name: Gather Instance per customers for Azure
-    azure_rm_resource_facts:
-      resource_type: virtualmachine
-    register: ec2_details
-    when: "'azure' is in group_names"
-    run_once: yes
-    delegate_to: localhost
-    become: no
+- name: Gather Instance per customers for Azure
+  azure_rm_resource_facts:
+    resource_type: virtualmachine
+  register: ec2_details
+  when: "'azure' is in group_names"
+  run_once: yes
+  delegate_to: localhost
+  become: no
 
 
 
