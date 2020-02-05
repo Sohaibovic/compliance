@@ -6,13 +6,12 @@
   tasks: 
 
   - name: Gather Instance per customers for ec2
-    ec2_instance_info:
-    
+    ec2_instance_facts:
     register: ec2_details
     when: '"ec2" is in group_namess'
 
   - name: Gather Instance per customers for Azure
-    azure_rm_resource_info:
+    azure_rm_resource_facts:
       resource_type: virtualmachine
     register: ec2_details
     when: '"azure" is in group_namess'
