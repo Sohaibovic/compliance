@@ -18,13 +18,7 @@
     set_fact:
       needed: "{{ ec2_details | json_query(query) }}"
     vars:
-      query: "instances[*].[private_ip_address, image_id, key_name, instance_type , tags ]"
-    run_once: yes
-    delegate_to: localhost
-    become: no
-
-  - debug: 
-      var: needed 
+      query: "instances[*].[private_ip_address, image_id, key_name, instance_type, tags ]"
     run_once: yes
     delegate_to: localhost
     become: no
@@ -49,34 +43,19 @@
             }
           ) 
         }}"
-    loop: "{{ needed }}"
+    loop: "{{ ec2_needed }}"
     run_once: yes
     delegate_to: localhost
     become: no
 
-  - debug: 
-      var: eap_facts  
-
-  - name: Gather Instance per customers for ec2
-    ec2_instance_facts:
-      region: eu-west-1
+  - name: Gather Instance per customers for Azure
+    azure_rm_resource_facts:
+      resource_type: virtualmachine
     register: ec2_details
+    when: "'azure' is in group_names"
     run_once: yes
     delegate_to: localhost
     become: no
-
-
-  # - debug: 
-  #     var: eap_facts
-
-  # - name: Gather Instance per customers for Azure
-  #   azure_rm_resource_facts:
-  #     resource_type: virtualmachine
-  #   register: ec2_details
-  #   when: "'azure' is in group_names"
-  #   run_once: yes
-  #   delegate_to: localhost
-  #   become: no
 
 
 
