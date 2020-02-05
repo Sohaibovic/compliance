@@ -69,15 +69,26 @@
                       'image_id': item.properties.storageProfile.imageReference,
                       'key_name': item.properties.osProfile.adminUsername, 
                       'instance_type': item.properties.hardwareProfile.vmSize, 
-                      'tags': item.tags|default({}) 
+                      'tags': item.tags|default({}),
+                      'rg': item.properties.networkProfile.networkInterfaces.0.id.split('/')[4]
                     } 
                   }
                 ) 
               }}"
           loop: "{{ az_details.response }}"
 
+        - set_fact:
+            az_ip_facts: {}
+
+        - name: Get IP from nics
+          azure_rm_networkinterface_info:
+            resource_group: item.value.rg
+            name: item.key
+          register: az_ip_facts
+          loop: "{{ az_eap_facts }}"
+
         - debug: 
-            var: az_eap_facts
+            var: az_ip_facts
       
       when: "'azure' is in group_names"
       run_once: yes
