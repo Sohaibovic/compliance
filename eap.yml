@@ -118,14 +118,22 @@
         - debug: 
             var: az_eap_dict
 
+         - set_fact:
+            az_rg_dict: {}
+
+        - name: Build a list of ip for each RG
+          set_fact: 
+            "{{ az_ip_dict | combine(
+                item.value.tags.Customer: item.key
+            )}}"  
+          when: item.value.tags.Customer is defined 
+          loop: "{{ az_eap_dict | dict2items }}"
+
+
+
       when: "'azure' is in group_names"
       run_once: yes
       delegate_to: localhost
       become: no
 
-
-
-  # # - name: Is instance HA or not 
-
-
-  # # - name: 
+   
