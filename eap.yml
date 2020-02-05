@@ -45,7 +45,9 @@
 
     - name: Gather Instance per customers for Azure
       azure_rm_resource_facts:
-        resource_type: Microsoft.Compute/virtualMachines
+        resource_type: VirtualMachines
+        provider: compute
+        api_version: "2019-07-01"
       register: ec2_details
       when: "'azure' is in group_names"
       run_once: yes
