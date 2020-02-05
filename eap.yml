@@ -38,6 +38,7 @@
               }}"
           loop: "{{ ec2_needed }}"
 
+      when: "'ec2' is in group_names"
       run_once: yes
       delegate_to: localhost
       become: no
@@ -52,7 +53,6 @@
             provider: compute
             api_version: "2019-07-01"
           register: az_details
-          when: "'azure' is in group_names"
           run_once: yes
           delegate_to: localhost
           become: no
@@ -78,7 +78,8 @@
 
         - debug: 
             var: az_eap_facts
-
+      
+      when: "'azure' is in group_names"
       run_once: yes
       delegate_to: localhost
       become: no
