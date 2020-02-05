@@ -118,13 +118,13 @@
         - debug: 
             var: az_eap_dict
 
-         - set_fact:
+        - set_fact:
             az_rg_dict: {}
 
         - name: Build a list of ip for each RG
           set_fact: 
             "{{ az_ip_dict | combine(
-                item.value.tags.Customer: item.key
+                item.value.tags.Customer: [ az_rg_dict[item.value.tags.Customer + item.key ]
             )}}"  
           when: item.value.tags.Customer is defined 
           loop: "{{ az_eap_dict | dict2items }}"
