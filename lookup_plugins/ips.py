@@ -24,6 +24,6 @@ class LookupModule(LookupBase):
                     ret[customer].append(ip)
                 else:
                     ret[customer] = [ip]
-        return ret
+        return [ret]
 
 
