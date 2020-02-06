@@ -23,7 +23,11 @@ class LookupModule(LookupBase):
                 if customer in ret:
                     ret[customer].append(ip)
                 else:
-                    ret[customer] = [ip]
-        return [ret]
+                    rlist = []
+                    rlist.append(ip)
+                    ret[customer] = rlist
+        lret = []
+        lret.append(ret)
+        return lret
 
 
